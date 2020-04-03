@@ -14,14 +14,6 @@
             "defaultValue": "web2",
             "type": "String"
         },
-        "components_hbweb1_name": {
-            "defaultValue": "hbweb1",
-            "type": "String"
-        },
-        "components_hbweb2_name": {
-            "defaultValue": "hbweb2",
-            "type": "String"
-        },
         "serverfarms_ASP_rgtestTrafficManager_b4d6_name": {
             "defaultValue": "ASP-rgtestTrafficManager-b4d6",
             "type": "String"
@@ -33,28 +25,7 @@
     },
     "variables": {},
     "resources": [
-        {
-            "type": "microsoft.insights/components",
-            "apiVersion": "2015-05-01",
-            "name": "[parameters('components_hbweb1_name')]",
-            "location": "westeurope",
-            "kind": "web",
-            "properties": {
-                "Application_Type": "web",
-                "Request_Source": "IbizaWebAppExtensionCreate"
-            }
-        },
-        {
-            "type": "microsoft.insights/components",
-            "apiVersion": "2015-05-01",
-            "name": "[parameters('components_hbweb2_name')]",
-            "location": "centralus",
-            "kind": "web",
-            "properties": {
-                "Application_Type": "web",
-                "Request_Source": "IbizaWebAppExtensionCreate"
-            }
-        },
+      
         {
             "type": "Microsoft.Web/serverfarms",
             "apiVersion": "2018-02-01",
@@ -331,32 +302,7 @@
                 "reservedInstanceCount": 0
             }
         },
-        {
-            "type": "Microsoft.Web/sites/hostNameBindings",
-            "apiVersion": "2018-11-01",
-            "name": "[concat(parameters('sites_hbweb1_name'), '/hbtest-tm-webapp-priority.trafficmanager.net')]",
-            "location": "West Europe",
-            "dependsOn": [
-                "[resourceId('Microsoft.Web/sites', parameters('sites_hbweb1_name'))]"
-            ],
-            "properties": {
-                "siteName": "hbweb1",
-                "hostNameType": "Verified"
-            }
-        },
-        {
-            "type": "Microsoft.Web/sites/hostNameBindings",
-            "apiVersion": "2018-11-01",
-            "name": "[concat(parameters('sites_hbweb2_name'), '/hbtest-tm-webapp-priority.trafficmanager.net')]",
-            "location": "Central US",
-            "dependsOn": [
-                "[resourceId('Microsoft.Web/sites', parameters('sites_hbweb2_name'))]"
-            ],
-            "properties": {
-                "siteName": "hbweb2",
-                "hostNameType": "Verified"
-            }
-        },
+        
         {
             "type": "Microsoft.Web/sites/hostNameBindings",
             "apiVersion": "2018-11-01",
@@ -439,6 +385,35 @@
                     }
                 ],
                 "trafficViewEnrollmentStatus": "Disabled"
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/hostNameBindings",
+            "apiVersion": "2018-11-01",
+            "name": "[concat(parameters('sites_hbweb1_name'), '/hbtest-tm-webapp-priority.trafficmanager.net')]",
+            "location": "West Europe",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_hbweb1_name'))]",
+                "[resourceId('Microsoft.Network/trafficManagerProfiles', parameters('trafficManagerProfiles_TM_WebApp_Priority_name'))]"
+            ],
+            "properties": {
+                "siteName": "hbweb1",
+                "hostNameType": "Verified"
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/hostNameBindings",
+            "apiVersion": "2018-11-01",
+            "name": "[concat(parameters('sites_hbweb2_name'), '/hbtest-tm-webapp-priority.trafficmanager.net')]",
+            "location": "Central US",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_hbweb2_name'))]",
+                "[resourceId('Microsoft.Network/trafficManagerProfiles', parameters('trafficManagerProfiles_TM_WebApp_Priority_name'))]"
+
+            ],
+            "properties": {
+                "siteName": "hbweb2",
+                "hostNameType": "Verified"
             }
         }
     ]

@@ -3,25 +3,19 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "sites_hbweb1_name": {
-            "value": null
+            "value": "hbweb1"
         },
         "sites_hbweb2_name": {
-            "value": null
+            "value": "hbweb2"
         },
         "serverfarms_web2_name": {
-            "value": null
-        },
-        "components_hbweb1_name": {
-            "value": null
-        },
-        "components_hbweb2_name": {
-            "value": null
+            "value": "sf-hbweb2"
         },
         "serverfarms_ASP_rgtestTrafficManager_b4d6_name": {
-            "value": null
+            "value": "sv-hbweb1"
         },
-        "trafficManagerProfiles_TM_WebApp_Priority_name": {
-            "value": null
+             "trafficManagerProfiles_TM_WebApp_Priority_name": {
+            "value": "TM-webapp-priority"
         }
     }
 }
