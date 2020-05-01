@@ -1,0 +1,51 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "virtualMachines_SalesVM_name": {
+            "value": null
+        },
+        "virtualNetworks_SalesVNet_name": {
+            "value": null
+        },
+        "virtualMachines_ResearchVM_name": {
+            "value": null
+        },
+        "virtualMachines_MarketingVM_name": {
+            "value": null
+        },
+        "virtualNetworks_ResearchVNet_name": {
+            "value": null
+        },
+        "virtualNetworks_MarketingVNet_name": {
+            "value": null
+        },
+        "networkInterfaces_SalesVMVMNic_name": {
+            "value": null
+        },
+        "networkSecurityGroups_SalesVMNSG_name": {
+            "value": null
+        },
+        "networkInterfaces_ResearchVMVMNic_name": {
+            "value": null
+        },
+        "publicIPAddresses_SalesVMPublicIP_name": {
+            "value": null
+        },
+        "networkInterfaces_MarketingVMVMNic_name": {
+            "value": null
+        },
+        "networkSecurityGroups_ResearchVMNSG_name": {
+            "value": null
+        },
+        "networkSecurityGroups_MarketingVMNSG_name": {
+            "value": null
+        },
+        "publicIPAddresses_ResearchVMPublicIP_name": {
+            "value": null
+        },
+        "publicIPAddresses_MarketingVMPublicIP_name": {
+            "value": null
+        }
+    }
+}
