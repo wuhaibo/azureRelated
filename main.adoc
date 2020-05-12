@@ -7,15 +7,20 @@
 ## Architect greet solution 
 
 ### Pillars of a greate azure architecture
+
 ### Design for security in azure 
+
 ### Design for performance and scalability in Azure
+
 ### Design for efficiency and operations in Azure
 ### Design for availability and recoverability in Azure
 
 ## Architect network infrastructure in Azure
 
 ### Connect your on-premises network to Azure with VPN Gateway
+
 ### Connect your on-premises network to the Microsoft global network by using ExpressRoute
+
 ### Secure and isolate access to Azure resources by using network security groups and service endpoints
 ### Distribute your services across Azure virtual networks and integrate them by using virtual network peering
 ### Enhance your service availability and data locality by using Azure Traffic Manager
