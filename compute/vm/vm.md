@@ -1,4 +1,4 @@
-# compute
+# compute:VM
 
 ## azure compute services
 - virtual machines

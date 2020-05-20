@@ -1,3 +1,5 @@
+# ArchitectInfrastructureOperation
+
 ## What are resource groups
 - Logical grouping of resources
 - life cycle. If you delete a resource group, all resources contained within are also deleted.

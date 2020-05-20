@@ -120,3 +120,172 @@ The post-migration phase is critical because it ensures that your data is both a
 ## Develop and configure an ASP.NET application that queries an Azure SQL database
 
 use public endpoint of the db to connect.
+
+
+## create cosmos db 
+
+### What is a request unit?
+It is a measure of the db operation. Reading 1kb document is 1ru, while create, delete or replace cost more ru.
+
+**Request Unit(Ru) depending on **
+- Item size
+- Item indexing
+- Item property count
+- Indexed properties
+- Data consistency
+- Query patterns 
+  - The number of query results
+  - The number of predicates
+  - The nature of the predicates
+  - The number of user-defined functions
+  - The size of the source data
+  - The size of the result set
+  - Projections
+
+The ru costed by operation could be found via Evaluate request unit charge for a query.(https://docs.microsoft.com/en-us/azure/cosmos-db/optimize-cost-queries#evaluate-request-unit-charge-for-a-query)
+
+**Exceeding throughput limits**
+Your request will be rate-limited, when exceeding the new throughput. Baisically, the retry after spedified interval should be done. .net sdk can do it automatically.
+
+You can change the number of request units provisioned to a database at any time. When you create an account, you can provision a minimum of 400 RU/s, or a maximum of 250,000 RU/s in the portal. If you need even more throughput, fill out a ticket in the Azure portal.
+
+
+### partition 
+
+scale out or horizontal scaling is possible for cosmos db.
+
+**partition key.**
+
+A partition key is the value by which Azure organizes your data into logical divisions. It should aim to evenly distribute operations across the database to avoid hot partitions. it's set when you create a container and can't be changed. The amount of required RU's and storage determines the number of required physical partitions for the container, which are completely managed by Azure Cosmos DB. When additional physical partitions are needed, Cosmos DB automatically creates them by splitting existing ones. There is no downtime or performance impact for the application. The storage space for the data associated with each partition key can't exceed 20 GB, which is the size of one physical partition in Azure Cosmos DB. So, if your single userID or productId record is going to be larger than 20 GB, think about using a composite key instead so that each record is smaller. An example of a composite key would be userID-date, which would look like CustomerName-08072018. This composite key approach would enable you to create a new partition for each day a user visited the site.
+
+**Choosing a Partition Key**
+For each Azure Cosmos DB container, you should specify a partition key that satisfies the following core properties:
+
+- Have a high cardinality. This option allows data to distribute evenly across all physical partitions.
+- Evenly distribute requests. Remember the total number of RU/s is evenly divided across all physical partitions.
+- Evenly distribute storage. **Each partition can grow up to 20 GB in size**.
+
+## Distribute your data globally with Azure Cosmos DB
+
+**why Global distribution**
+
+- Delivering low-latency data access to end users no matter where they are located around the globe
+- Adding regional resiliency for business continuity and disaster recovery (BCDR).(paired azure region:https://docs.microsoft.com/en-us/azure/best-practices-availability-paired-regions)
+
+**Cost**  
+Replicating to 3 additional regions, would cost approximately four times the original non-replicated database.
+
+**set replicate data**
+setting -> replicate data globally
+
+### Write to multiple regions
+
+**multi-master support**
+
+Multi-master support is an option that can be enabled on new Azure Cosmos DB accounts. Once the account is replicated in multiple regions, each region is a master region that equally participates in a write-anywhere model, also known as an active-active pattern.
+
+
+**benefits of multi-master support are:**
+
+ 
+- Single-digit write latency – Multi-master accounts have an improved write latency of <10 ms for 99% of  writes, up from <15 ms for non-multi-master accounts.
+
+- 99.999% read-write availability - The write availability multi-master accounts increases to 99.999%, up from the 99.99% for non-multi-master accounts.
+
+- Unlimited write scalability and throughput – With multi-master accounts, you can write to every region, providing unlimited write scalability and throughput to support billions of devices.
+
+- Built-in conflict resolution – Multi-master accounts have three methods for resolving conflicts to ensure global data integrity and consistency.
+
+**Conflict resolution offered by Azure Cosmos DB:**
+
+
+- Last-Writer-Wins (LWW), in which conflicts are resolved based on the value of a user-defined integer property in the document. By default _ts is used to determine the last written document. Last-Writer-Wins is the default conflict handling mechanism.
+- Custom - User-defined function, in which you can fully control conflict resolution by registering a User-defined function to the collection. A User-defined function is a special type of stored procedure with a specific signature. If the User-defined function fails or does not exist, Azure Cosmos DB will add all conflicts into the read-only conflicts feed they can be processed asynchronously.
+- Custom - Async, in which Azure Cosmos DB excludes all conflicts from being committed and registers them in the read-only conflicts feed for deferred resolution by the user’s application. The application can perform conflict resolution asynchronously and use any logic or refer to any external source, application, or service to resolve the conflict.
+
+
+**cosmos sdk failover**
+- read region has an outage. 
+  
+  sdk detects read region unavailable. -> mark this region offline -> find available read region -> if no available region found -> redirect to write region -> if failed region ok then sdk resume the original setting. 
+
+- write region has an outage
+
+  sdk detects write region unavailable. -> mark this region offline -> find available write region ( Applications can use the WriteEndpoint property of DocumentClient class to detect the change in write region. not automatically??) -> if failed region ok then sdk resume the original setting. 
+
+  **Consistency basics of azure cosmos db**
+
+  ![alt](img/cosmosDbConsistencyLevel.png)
+
+  About 73% of Azure Cosmos DB tenants use session consistency and 20% prefer bounded staleness.
+
+  - strong. Low latency not possible. write must be processed by all replica first. 
+  - bounded staleness. can be late of several version or some interval.
+  - session. I can see my write. 
+  - consistent prefix. read reveals the correct write order.  e.g. write order is a,b,c. read can never be b,a,c. 
+  - eventual. In the end, they converges. 
+
+## Insert and query data in your Azure Cosmos DB database
+
+### sql join clause
+The JOIN clause lets you perform inner joins with the document and the document subroots. meaning the document subroots not null.
+
+### Geospatial queries
+there are Geospatial queries feature in sql api from azure cosmos db. like getting distance. 
+
+### select is the only required clause: select 1 returns 1
+
+## Design a data warehouse with Azure Synapse Analytics
+Azure Synapse Analytics combines the enterprise data warehouse of SQL, the Big Data analytics capabilities of Spark, and data integration technologies to ease the movement of data between both, and from external data sources. 
+![alt](img/SynapseArchitecture.png)
+
+### Data Warehousing with Azure Synapse Analytics
+
+- sql pool:CPU, memory, and IO are bundled into units of compute scale.
+- Data Warehousing Units: size of SQL pool is determined by Data Warehousing Units (DWU)
+- more dwu cost more
+
+### why synapse
+
+The Azure Synapse Analytics capabilities are made possible due to the decoupling of computation and storage using the Massively Parallel Processing architecture.
+
+### Azure Synapse Analytics features
+- Workload Management
+  - workload groups
+  - workload classification
+  - workload priority
+- Result-set Cache
+- Materialized Views
+- CI/CD Support
+
+### workloads
+- Modern Data Warehouse worklods
+  data sources can be many and different types. 
+
+- Advanced Analytical Workloads
+  big data store, hadoop, spark. PolyBase  could be used to query big data store
+
+### massively parallel processing concepts
+![alt](img/massiveParallelProcessing.png)
+
+### Synapse table type in storage 
+- Hash:good
+- Round Robin: easy, one by one
+- Replicate: good for small table, basically a copy of data 
+
+## PolyBase in synapse analytics
+![alt](img/polybaseInSynapse.png)
+
+### data loading steps
+
+- Extract the source data into text files.
+- Load the data into Azure Blob storage, Hadoop, or Azure Data Lake Store.
+- Import the data into SQL Data Warehouse staging tables by using PolyBase.
+  - create external data source credential table
+  - create external data source connection
+  - define the import file format
+  - Create a temporary table
+  - Create a destination table
+- Transform the data (optional).
+- Insert the data into production tables.
+
